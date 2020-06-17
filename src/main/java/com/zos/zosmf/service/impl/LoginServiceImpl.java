@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
             Object ZOSMF_Account;
 
             //获取zosmf地址
-            ZOSMF_Address = "?";
+            ZOSMF_Address = "10.60.43.8:8800";
             //获取登录账户名
             ZOSMF_Account = loginInformation.getAccount().toUpperCase();
             //禁用ssl证书校验
@@ -78,5 +78,13 @@ public class LoginServiceImpl implements LoginService {
             e.printStackTrace();
             return "time out";
         }
+    }
+
+    @Override
+    public void logoff(HttpSession session) {
+        session.removeAttribute("ZOSMF_JSESSIONID");
+        session.removeAttribute("ZOSMF_LtpaToken2");
+        session.removeAttribute("ZOSMF_Address");
+        session.removeAttribute("ZOSMF_Account");
     }
 }
