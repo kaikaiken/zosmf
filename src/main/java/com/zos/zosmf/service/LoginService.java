@@ -10,4 +10,7 @@ public interface LoginService {
 
     //注销
     void logoff(HttpSession session);
+
+    //检查是否登陆
+    boolean notLogin(HttpSession session);
 }

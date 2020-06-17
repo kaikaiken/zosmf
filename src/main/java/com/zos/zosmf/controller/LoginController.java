@@ -6,14 +6,12 @@ import com.zos.zosmf.utils.Result;
 import com.zos.zosmf.utils.StatusCode;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/user")
 @CrossOrigin
 public class LoginController {
 
@@ -26,15 +24,17 @@ public class LoginController {
     @ApiOperation(value = "",notes = "登陆",tags = {"LoginController"})
     @PostMapping(value = "/login")
     public Result login(String username, String password, HttpSession session) {
-        if(notLogin(session)){
+        if(loginService.notLogin(session)){
             LoginInformation loginInformation = new LoginInformation();
             loginInformation.setAccount(username);
             loginInformation.setPassword(password);
-            return new Result(true, StatusCode.OK,"登陆成功",loginService.login(loginInformation , session));
-        }else{
-            return new Result(true, StatusCode.OK,"登陆成功","你登陆过了");
+            String request = loginService.login(loginInformation , session);
+            if(request.equals("successful")){
+                return new Result(true, StatusCode.OK,"登陆成功");
+            }
+            return new Result(true, StatusCode.ERROR,"登陆失败",request);
         }
-
+        return new Result(true, StatusCode.OK,"登陆失败","你已经登陆过了");
     }
 
     /***
@@ -47,13 +47,7 @@ public class LoginController {
         return new Result(true,StatusCode.OK,"注销成功");
     }
 
-    public static boolean notLogin(HttpSession session) {
-        Object ZOSMF_JSESSIONID = session.getAttribute("ZOSMF_JSESSIONID");
-        Object ZOSMF_LtpaToken2 = session.getAttribute("ZOSMF_LtpaToken2");
-        Object ZOSMF_Address = session.getAttribute("ZOSMF_Address");
-        Object ZOSMF_Account = session.getAttribute("ZOSMF_Account");
-        return ZOSMF_JSESSIONID == null || ZOSMF_LtpaToken2 == null || ZOSMF_Address == null || ZOSMF_Account == null;
-    }
+
 
 
 }
