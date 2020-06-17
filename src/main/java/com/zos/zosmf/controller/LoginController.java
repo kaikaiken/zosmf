@@ -23,10 +23,10 @@ public class LoginController {
      */
     @ApiOperation(value = "",notes = "登陆",tags = {"LoginController"})
     @PostMapping(value = "/login")
-    public Result login(String username, String password, HttpSession session) {
+    public Result login(String account, String password, HttpSession session) {
         if(loginService.notLogin(session)){
             LoginInformation loginInformation = new LoginInformation();
-            loginInformation.setAccount(username);
+            loginInformation.setAccount(account);
             loginInformation.setPassword(password);
             String request = loginService.login(loginInformation , session);
             if(request.equals("successful")){
